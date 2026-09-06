@@ -118,8 +118,21 @@ const NotificationsPage = () => {
                                 Baca semua
                             </button>
                         )}
-                        {notifications.some(n => n.isRead)
-                        }
+                        {notifications.some(n => n.isRead) && (
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        await notificationApi.deleteReadNotifications();
+                                        setNotifications(prev => prev.filter(n => !n.isRead));
+                                    } catch (err) {
+                                        console.error(err);
+                                    }
+                                }}
+                                className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                Hapus yang dibaca
+                            </button>
+                        )}
                     </div>
                 </div>
 

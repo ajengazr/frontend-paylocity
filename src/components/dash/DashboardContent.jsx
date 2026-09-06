@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -33,10 +34,10 @@ const sectionVariants = {
 // Wrapper untuk tab CRUD agar tetap animate saat switch
 const TabWrapper = ({ children }) => (
     <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
+        initial={{ opacity: 0, y: 22, scale: 0.995 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -12, scale: 0.995 }}
+        transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
     >
         {children}
     </motion.div>
@@ -72,6 +73,7 @@ const DashboardContent = ({
 }) => {
     const { user } = useAuth();
     const { isDark } = useTheme();
+    const [updatedAt] = useState(() => new Date());
 
     // ==================== TAB ROUTING (dengan animasi) ====================
     if (activeTab === 'Kelola Admin') return <TabWrapper><AdminCrud /></TabWrapper>;
@@ -96,12 +98,25 @@ const DashboardContent = ({
             animate="visible"
         >
             {/* Header */}
-            <motion.div variants={sectionVariants} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
-                <div>
-                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">Dashboard</h2>
+            <motion.div variants={sectionVariants} className={`relative flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 overflow-hidden rounded-2xl border p-4 sm:p-5 lg:p-6 ${isDark ? 'bg-[#1e293b] border-[#2d3748]' : 'bg-white border-gray-100'}`}>
+                <div className="relative">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">
+                        Selamat datang kembali,{' '}
+                        <span className="text-gradient">{user?.name || 'User'}</span>
+                    </h2>
                     <p className={`text-xs sm:text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Selamat datang kembali, {user?.name || 'User'}. Berikut ringkasan untuk Anda.
+                        {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} · Berikut ringkasan untuk Anda.
                     </p>
+                </div>
+                {/* Indikator pembaruan */}
+                <div className="relative hidden sm:flex items-center gap-2">
+                    <span className="relative flex w-2 h-2">
+                        <span className={`absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping ${isDark ? 'bg-[#ff9a5c]' : 'bg-[#ff6b00]'}`} />
+                        <span className={`relative inline-flex w-2 h-2 rounded-full ${isDark ? 'bg-[#ff9a5c]' : 'bg-[#ff6b00]'}`} />
+                    </span>
+                    <span className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                        Terakhir diperbarui {updatedAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                 </div>
             </motion.div>
 
@@ -114,7 +129,6 @@ const DashboardContent = ({
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: i * 0.08, ease: 'easeOut' }}
-                            whileHover={{ y: -4, transition: { duration: 0.2 } }}
                         >
                             <StatCard {...stat} />
                         </motion.div>

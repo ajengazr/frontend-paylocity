@@ -120,7 +120,9 @@ const PayrollSummary = ({ initialData, role }) => {
 
                 // FIX: bedain endpoint admin vs employee
                 const res = isAdmin
-                    ? await dashboardApi.getPayrollByPeriod(selectedPeriod)
+                    ? (selectedPeriod === 'all'
+                        ? await dashboardApi.getAllPayrollSummary()
+                        : await dashboardApi.getPayrollByPeriod(selectedPeriod))
                     : await dashboardApi.getEmployeePayrollSummary(selectedPeriod);
 
                 if (!mounted) return;
@@ -149,9 +151,9 @@ const PayrollSummary = ({ initialData, role }) => {
         : 0;
 
     return (
-        <div className={`rounded-xl border shadow-sm overflow-hidden transition-all ${isDark ? 'bg-[#0f172a] border-[#2d3748]' : 'bg-white border-gray-200'}`}>
+        <div className="card-modern card-accent rounded-2xl overflow-hidden">
             {/* Header */}
-            <div className={`px-6 py-5 border-b ${isDark ? 'border-gray-800/50' : 'border-gray-100'}`}>
+            <div className={`px-6 py-5 border-b ${isDark ? 'border-gray-800/50' : 'border-gray-100/70'}`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-[#ff6b00]/10 rounded-lg">
@@ -208,12 +210,12 @@ const PayrollSummary = ({ initialData, role }) => {
                             const isNegative = ['Potongan', 'PPh 21'].includes(item.label);
                             const isHighlight = item.label === 'Gaji Pokok';
                             return (
-                                <div key={i} className={`p-4 rounded-xl border transition-all hover:scale-[1.02] ${isDark ? 'bg-[#1e293b] border-[#2d3748] hover:border-[#ff6b00]/30' : 'bg-gray-50 border-gray-100 hover:border-[#ff6b00]/30'}`}>
+                                <div key={i} className={`p-4 rounded-xl ${isDark ? 'bg-[#1e293b] border border-[#ff6b00]/10' : 'bg-gray-50 border border-[#ff6b00]/10'}`}>
                                     <div className="flex items-center gap-2 mb-3">
                                         <div className={`w-2 h-2 rounded-full ${item.color}`} />
                                         <p className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{item.label}</p>
                                     </div>
-                                    <p className={`text-lg font-bold ${isNegative ? 'text-red-500' : isHighlight ? 'text-[#ff6b00]' : isDark ? 'text-white' : 'text-gray-900'}`}>{item.value}</p>
+                                    <p className={`text-base sm:text-lg font-bold break-words ${isNegative ? 'text-red-500' : isHighlight ? 'text-[#ff6b00]' : isDark ? 'text-white' : 'text-gray-900'}`}>{item.value}</p>
                                     <div className="flex items-center gap-1 mt-2">
                                         {isNegative ? <ArrowDownRight className="w-3 h-3 text-red-500" /> : <ArrowUpRight className="w-3 h-3 text-emerald-500" />}
                                         <span className={`text-[10px] font-medium ${isNegative ? 'text-red-500' : 'text-emerald-500'}`}>{isNegative ? 'Pengurang' : 'Penambah'}</span>
@@ -233,7 +235,7 @@ const PayrollSummary = ({ initialData, role }) => {
                         <div className="text-left sm:text-right">
                             <p className={`text-[10px] uppercase font-bold tracking-widest mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Gaji Bersih</p>
                             <div className="flex items-center gap-2">
-                                <p className="text-2xl font-extrabold text-[#ff6b00]">{grandTotal}</p>
+                                <p className="text-lg sm:text-2xl font-extrabold text-[#ff6b00] break-words">{grandTotal}</p>
                                 {isProcessed && (
                                     <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 text-[10px] font-bold rounded border border-emerald-500/20">
                                         {status === 'Akumulasi' ? 'TOTAL' : 'NET'}

@@ -53,12 +53,17 @@ const HeroSection = () => {
     };
 
     return (
-        <section className="pt-20 sm:pt-24 pb-12 sm:pb-20 bg-linear-to-br from-[#fbf9f8] via-white to-[#E9F5FE] min-h-screen flex items-center overflow-hidden">
+        <section className="pt-20 sm:pt-24 pb-12 sm:pb-20 bg-linear-to-br from-[#fbf9f8] via-white to-[#E9F5FE] min-h-screen flex items-center overflow-hidden relative">
+            {/* Aurora blobs animasi */}
+            <div aria-hidden="true" className="absolute top-10 -left-24 w-80 h-80 rounded-full bg-[#ff6b00]/10 blur-3xl animate-blob" />
+            <div aria-hidden="true" className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-blue-400/15 blur-3xl animate-blob" style={{ animationDelay: '3s' }} />
+            <div aria-hidden="true" className="absolute top-1/3 right-1/4 w-64 h-64 rounded-full bg-purple-400/10 blur-3xl animate-blob" style={{ animationDelay: '6s' }} />
+            <div aria-hidden="true" className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
             <motion.div
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
-                className="max-w-6xl mx-auto px-4 sm:px-5 w-full"
+                className="relative max-w-6xl mx-auto px-4 sm:px-5 w-full"
             >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-12 items-center">
                     
@@ -154,10 +159,18 @@ const HeroSection = () => {
                         className="relative flex justify-center order-1 lg:order-2"
                     >
                         <div className="relative w-full max-w-[16rem] sm:max-w-[20rem] md:max-w-[24rem] lg:max-w-[26.25rem] mx-auto">
+                            {/* Ring gradien berputar */}
+                            <motion.div
+                                aria-hidden="true"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+                                className="absolute -inset-4 sm:-inset-6 rounded-[2.2rem] opacity-60"
+                                style={{
+                                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,107,0,0.5) 15%, transparent 35%, transparent 55%, rgba(96,165,250,0.5) 75%, transparent 95%)'
+                                }}
+                            />
                             <motion.div 
-                                className="bg-white rounded-3xl overflow-hidden aspect-square flex items-center justify-center shadow-2xl shadow-gray-200/50"
-                                whileHover={{ scale: 1.02, rotate: 1 }}
-                                transition={{ duration: 0.4 }}
+                                className="relative bg-white rounded-3xl overflow-hidden aspect-square flex items-center justify-center shadow-2xl shadow-gray-200/50"
                             >
                                 <img
                                     src="https://plus.unsplash.com/premium_photo-1779747617945-e9a831cfad95?q=80&w=1135&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -167,14 +180,30 @@ const HeroSection = () => {
                                 />
                             </motion.div>
 
-                            {/* Floating Card */}
+                            {/* Floating Card 1 */}
                             <motion.div
                                 animate={{ y: [0, -12, 0] }}
                                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute -bottom-2 sm:-bottom-4 right-3 sm:right-8 bg-white rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl flex items-center gap-2 sm:gap-3"
+                                className="absolute -bottom-2 sm:-bottom-4 right-3 sm:right-8 bg-white/90 backdrop-blur rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl flex items-center gap-2 sm:gap-3 border border-gray-100"
                             >
                                 <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full animate-pulse flex-shrink-0" />
                                 <span className="font-semibold text-xs sm:text-sm whitespace-nowrap">Hanya 1 Menit*</span>
+                            </motion.div>
+
+                            {/* Floating Card 2 */}
+                            <motion.div
+                                animate={{ y: [0, -16, 0] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                                className="absolute -top-3 -left-4 sm:-left-8 bg-white/90 backdrop-blur rounded-2xl px-3.5 sm:px-5 py-2.5 sm:py-3 shadow-xl border border-gray-100 flex items-center gap-2"
+                            >
+                                <motion.span
+                                    animate={{ scale: [1, 1.25, 1] }}
+                                    transition={{ duration: 1.6, repeat: Infinity }}
+                                    className="text-sm sm:text-base"
+                                >
+                                    🔒
+                                </motion.span>
+                                <span className="font-semibold text-xs sm:text-sm whitespace-nowrap">100% Aman</span>
                             </motion.div>
                         </div>
                     </motion.div>

@@ -1,26 +1,12 @@
-import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useLoading } from '../../contexts/LoadingContext';
 import { fadeInUp, staggerContainer } from '../../animations/variants';
 
 const FiveSection = () => {
-    const { showLoading } = useLoading();
     const navigate = useNavigate();
-    const timeoutRef = useRef(null);
-
-    // Cleanup timeout saat komponen unmount
-    useEffect(() => {
-        return () => {
-            if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        };
-    }, []);
 
     const handleClick = () => {
-        showLoading();
-        timeoutRef.current = setTimeout(() => {
-            navigate('/login');
-        }, 2000);
+        navigate('/login');
     };
 
     return (

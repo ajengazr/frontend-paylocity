@@ -6,15 +6,14 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: 'bold', color: '#ff6b00' },
   subtitle: { fontSize: 10, color: '#666', marginTop: 4 },
   summary: { marginBottom: 15, padding: 10, backgroundColor: '#f9f9ff', borderRadius: 4 },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
   table: { marginTop: 10 },
   tableHeader: { flexDirection: 'row', backgroundColor: '#f3f4f6', padding: 6, borderBottom: '1px solid #ddd' },
   tableRow: { flexDirection: 'row', padding: 6, borderBottom: '1px solid #eee' },
-  colName: { width: '15%' },
-  colNik: { width: '12%' },
-  colDept: { width: '13%' },
-  colPos: { width: '12%' },
-  colRight: { width: '12%', textAlign: 'right' },
+  colName: { width: '18%' },
+  colNik: { width: '13%' },
+  colDept: { width: '14%' },
+  colPos: { width: '15%' },
+  colRight: { width: '10%', textAlign: 'right' },
   footer: { marginTop: 20, textAlign: 'center', fontSize: 8, color: '#999' }
 });
 
@@ -27,27 +26,23 @@ const PayrollReportPdf = ({ data }) => (
     <Page size="A4" orientation="landscape" style={styles.page}>
       <View style={styles.header}>
         <Text style={styles.title}>PAYLOCITY</Text>
-        <Text style={styles.subtitle}>Laporan Penggajian Periode {data.period}</Text>
+        <Text style={styles.subtitle}>Laporan Penggajian - Periode {data.period}</Text>
       </View>
 
       <View style={styles.summary}>
-        <View style={styles.summaryRow}>
-          <Text>Total Karyawan: {data.summary.totalEmployees}</Text>
-          <Text>Total Gaji Pokok: {formatRupiahPDF(data.summary.totalBasicSalary)}</Text>
-          <Text>Total Lembur: {formatRupiahPDF(data.summary.totalOvertimePay)}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text>Total BPJS: {formatRupiahPDF(data.summary.totalBpjsDeductions)}</Text>
-          <Text>Total PPh 21: {formatRupiahPDF(data.summary.totalPph21)}</Text>
-          <Text>Total Gaji Bersih: {formatRupiahPDF(data.summary.totalNetSalary)}</Text>
-        </View>
+        <Text>Total Karyawan: {data.summary.totalEmployees}</Text>
+        <Text>Gaji Pokok: {formatRupiahPDF(data.summary.totalBasicSalary)}</Text>
+        <Text>Tunjangan Lembur: {formatRupiahPDF(data.summary.totalOvertimePay)}</Text>
+        <Text>Potongan BPJS: {formatRupiahPDF(data.summary.totalBpjsDeductions)}</Text>
+        <Text>PPh 21: {formatRupiahPDF(data.summary.totalPph21)}</Text>
+        <Text>Gaji Bersih: {formatRupiahPDF(data.summary.totalNetSalary)}</Text>
       </View>
 
       <View style={styles.table}>
         <View style={styles.tableHeader}>
           <Text style={styles.colName}>Nama</Text>
           <Text style={styles.colNik}>NIK</Text>
-          <Text style={styles.colDept}>Dept</Text>
+          <Text style={styles.colDept}>Departemen</Text>
           <Text style={styles.colPos}>Jabatan</Text>
           <Text style={styles.colRight}>Gaji Pokok</Text>
           <Text style={styles.colRight}>Lembur</Text>

@@ -31,7 +31,7 @@ export const ROLE_CONFIG = {
             { name: 'Lembur', icon: 'Clock' },
             { name: 'Penggajian', icon: 'Wallet' },
             { name: 'Laporan', icon: 'FileText' },
-            { name: 'Admin HR', icon: 'Shield' },
+            { name: 'Kelola Admin', icon: 'Shield' },
         ],
         stats: [
             { label: 'Total Karyawan', value: '125', suffix: '', trend: '+4 bulan ini', icon: 'Users', color: 'blue' },

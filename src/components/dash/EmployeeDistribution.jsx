@@ -32,7 +32,7 @@ const EmployeeDistribution = ({ title, data, centerLabel }) => {
     }, [data, total, hasData, circumference]);
 
     return (
-        <div className={`p-5 rounded-xl border shadow-sm transition-all flex flex-col ${isDark ? 'bg-[#1e293b] border-[#2d3748]' : 'bg-white border-gray-100'}`}>
+        <div className={`card-modern card-accent p-5 rounded-2xl flex flex-col h-full`}>
             <h3 className="text-base font-semibold mb-1">{title}</h3>
             <p className={`text-xs mb-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Periode aktif</p>
 
@@ -104,13 +104,13 @@ const EmployeeDistribution = ({ title, data, centerLabel }) => {
             </div>
 
             {/* Legend */}
-            <div className="grid grid-cols-2 gap-2 mt-4">
+            <div className="grid grid-cols-2 gap-2 mt-4 overflow-y-auto overscroll-contain max-h-[168px] pr-1">
                 {data.map((item, i) => {
                     const percentage = total > 0 ? Math.round(((item.value || 0) / total) * 100) : 0;
                     return (
                         <div 
                             key={i} 
-                            className={`flex items-center gap-2 p-2 rounded-lg transition-colors cursor-default ${isDark ? 'hover:bg-[#2a3547]' : 'hover:bg-gray-50'}`}
+                            className={`flex items-center gap-2 p-2 rounded-lg transition-colors cursor-default`}
                         >
                             <span 
                                 className="w-3 h-3 rounded-full shrink-0 shadow-sm ring-2 ring-offset-1" 

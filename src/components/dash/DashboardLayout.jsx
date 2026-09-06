@@ -6,6 +6,9 @@ import TopHeader from './TopHeader';
 import DashboardContent from './DashboardContent';
 import ProcessPayrollModal from './ProcessPayrollModal';
 import useDashboardData from '../../hooks/useDashboardData';
+import payrollApi from '../../config/payrollApi';
+import overtimeApi from '../../config/overtimeApi';
+import { useToast } from '../../contexts/ToastContext';
 
 const formatRupiah = (val) => {
     if (val === undefined || val === null || val === '') return 'Rp 0';
@@ -17,10 +20,11 @@ const formatNumber = (val) => {
     return String(val);
 };
 
-const DashboardLayout = ({ role }) => {
+const DashboardLayout = ({ role, initialTab = 'Dashboard' }) => {
     const config = ROLE_CONFIG[role];
     const { isDark } = useTheme();
-    const [activeTab, setActiveTab] = useState('Dashboard');
+    const { addToast } = useToast();
+    const [activeTab, setActiveTab] = useState(initialTab);
     const [searchQuery, setSearchQuery] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -165,9 +169,35 @@ const DashboardLayout = ({ role }) => {
         );
     }
 
-    const handleConfirm = () => {
-        alert(config.isAdmin ? 'Proses payroll berhasil diinisiasi!' : 'Pengajuan lembur berhasil dikirim!');
-        setIsModalOpen(false);
+    const handleConfirm = async (periodFromModal) => {
+        try {
+            if (config.isAdmin) {
+                if (!periodFromModal) {
+                    addToast('Periode wajib diisi untuk memproses payroll.', 'error');
+                    return;
+                }
+                await payrollApi.create({ period: periodFromModal });
+                addToast(`Payroll periode ${periodFromModal} berhasil diproses!`, 'success');
+            } else {
+                const today = new Date().toISOString().split('T')[0];
+                await overtimeApi.create({
+                    date: today,
+                    startTime: '17:00',
+                    endTime: '18:00',
+                    dayType: 'WEEKDAY',
+                    reason: 'Pengajuan lembur dari dashboard',
+                });
+                addToast('Pengajuan lembur berhasil dikirim!', 'success');
+            }
+        } catch (err) {
+            const msg =
+                (typeof err?.response?.data?.errors === 'string' && err.response.data.errors) ||
+                (Array.isArray(err?.response?.data?.errors) && err.response.data.errors.join(', ')) ||
+                'Terjadi kesalahan saat memproses. Coba lagi.';
+            addToast(msg, 'error');
+        } finally {
+            setIsModalOpen(false);
+        }
     };
 
     if (loading) {
@@ -179,8 +209,9 @@ const DashboardLayout = ({ role }) => {
     }
 
     return (
-        <div className={`min-h-screen font-sans transition-colors duration-300 ${isDark ? 'bg-[#151c27] text-[#ebf1ff]' : 'bg-[#f9f9ff] text-[#151c27]'}`}>
-            <Sidebar menu={config.menu} activeTab={activeTab} setActiveTab={setActiveTab} role={role} />
+        <div className={`min-h-screen font-sans transition-colors duration-300 relative overflow-hidden ${isDark ? 'bg-[#151c27] text-[#ebf1ff]' : 'bg-[#f6f7f9] text-[#151c27]'}`}>
+            <div className="relative">
+            <Sidebar menu={config.menu} activeTab={activeTab} setActiveTab={setActiveTab} />
 
             <main className="min-h-screen flex flex-col lg:pl-64 pt-14 lg:pt-0">
                 <TopHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} userName={config.userName} userRole={config.userRole} userAvatar={config.userAvatar} />
@@ -217,7 +248,9 @@ const DashboardLayout = ({ role }) => {
                 desc={config.modalDesc}
                 btnConfirm={config.modalBtnConfirm}
                 btnCancel={config.modalBtnCancel}
+                requirePeriod={config.isAdmin}
             />
+            </div>
         </div>
     );
 };

@@ -15,9 +15,9 @@ const dashboardApi = {
     getAdminOvertime: () => api.get('/dashboard/admin/overtime-history'),
     getAdminActivity: () => api.get('/dashboard/admin/activity-log'),
     getAdminPayrollSummary: () => api.get('/dashboard/admin/payroll-summary'),
-    getAllPayrolls: () => api.get('/payroll/all'),
-    getPayrollPeriods: () => api.get('/payroll/periods'),
-    getPayrollByPeriod: (period) => api.get(`/payroll/${period}`),
+    getPayrollPeriods: () => api.get('/api/payrolls/periods'),
+    getPayrollByPeriod: (period) => api.get(`/api/payrolls/${period}/summary`),
+    getAllPayrollSummary: () => api.get('/api/payrolls/all'),
 };
 
 export default dashboardApi;

@@ -84,8 +84,8 @@ const SecondAbout = () => {
                         src="/logo.png"
                         alt="Paylocity Logo"
                         className="w-full max-w-48 sm:max-w-56 lg:max-w-[16rem] h-auto rounded-3xl"
-                        whileHover={{ scale: 1.03, rotate: 1 }}
-                        transition={{ duration: 0.4 }}
+                        animate={{ y: [0, -6, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                         loading="lazy"
                     />
                 </motion.div>

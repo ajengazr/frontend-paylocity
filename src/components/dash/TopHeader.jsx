@@ -106,7 +106,7 @@ const TopHeader = ({ searchQuery, setSearchQuery, userAvatar }) => {
     const handleDeleteReadNotifications = async () => {
         try {
             await notificationApi.deleteReadNotifications();
-            setNotifs(prev => prev.filter(n => !n.isRead));
+            fetchNotifications();
         } catch (err) {
             console.error(err);
         }
@@ -144,9 +144,9 @@ const TopHeader = ({ searchQuery, setSearchQuery, userAvatar }) => {
     return (
         <header className={`
             sticky top-0 z-30 w-full px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 
-            flex items-center justify-between border-b
+            flex items-center justify-between border-b glass
             transition-colors duration-200
-            ${isDark ? 'bg-[#1a2332] border-gray-700' : 'bg-white border-gray-200'}
+            ${isDark ? 'border-gray-700/70' : 'border-gray-200/70'}
         `}>
             {/* Search */}
             <div className="relative flex-1 max-w-40 sm:max-w-xs lg:max-w-md">
@@ -222,7 +222,13 @@ const TopHeader = ({ searchQuery, setSearchQuery, userAvatar }) => {
                             }
                         `}
                     >
-                        <Bell className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                        <motion.div
+                            animate={unreadCount > 0 ? { rotate: [0, -12, 12, -12, 12, 0] } : { rotate: 0 }}
+                            transition={{ duration: 0.6, repeat: unreadCount > 0 ? Infinity : 0, repeatDelay: 2.6 }}
+                            style={{ transformOrigin: 'top center' }}
+                        >
+                            <Bell className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                        </motion.div>
                         <AnimatePresence>
                             {unreadCount > 0 && (
                                 <motion.span
@@ -363,9 +369,6 @@ const TopHeader = ({ searchQuery, setSearchQuery, userAvatar }) => {
                     <div className="text-left hidden sm:block">
                         <p className={`text-sm font-semibold leading-tight ${isDark ? 'text-[#ebf1ff]' : 'text-[#151c27]'}`}>
                             {user?.name}
-                        </p>
-                        <p className={`text-[10px] lg:text-xs leading-tight ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {user?.role === 'SUPER_ADMIN' ? 'Super Admin' : user?.role === 'HR_ADMIN' ? 'HR Admin' : 'Karyawan'}
                         </p>
                     </div>
                 </div>

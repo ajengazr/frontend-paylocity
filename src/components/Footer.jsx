@@ -71,19 +71,26 @@ const Footer = () => {
                         </h3>
                         <ul className="space-y-2 sm:space-y-3">
                             {[
-                                { label: "Fitur Penggajian" },
-                                { label: "Pajak PPh 21" },
-                                { label: "Manajemen Absensi" },
+                                { label: 'Fitur Penggajian', path: '/about' },
+                                { label: 'Pajak PPh 21', path: '/about' },
+                                { label: 'Manajemen Absensi', path: '/about' },
                             ].map((link, index) => (
-                                <li key={index}>
+                                <motion.li
+                                    key={index}
+                                    whileHover={{ x: 4 }}
+                                    transition={{ duration: 0.2 }}
+                                >
                                     <button
                                         type="button"
                                         onClick={() => handleNavigate(link.path)}
-                                        className="text-sm text-gray-700 cursor-pointer text-left w-full py-1"
+                                        className="group relative text-sm text-gray-700 hover:text-[#ff6b00] transition-colors duration-300 cursor-pointer text-left w-full py-1"
                                     >
-                                        {link.label}
+                                        <span className="relative">
+                                            {link.label}
+                                            <span className="absolute left-0 -bottom-0.5 w-0 h-[1.5px] bg-[#ff6b00] transition-all duration-300 group-hover:w-full" />
+                                        </span>
                                     </button>
-                                </li>
+                                </motion.li>
                             ))}
                         </ul>
                     </motion.div>

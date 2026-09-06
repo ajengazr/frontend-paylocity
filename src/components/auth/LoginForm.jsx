@@ -6,6 +6,7 @@ import AuthFormCard from './AuthFormCard';
 import api from '../../config/api';
 import { useLoading } from "../../contexts/LoadingContext";
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
 
 const GoogleIcon = () => (
     <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -52,10 +53,26 @@ const LoginForm = () => {
     const { showLoading, hideLoading } = useLoading();
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { addToast } = useToast();
+
+    const handleSocialNotReady = () => {
+        addToast('Fitur login ini belum tersedia. Gunakan email & kata sandi.', 'error');
+    };
 
     useEffect(() => {
         hideLoading();
     }, [hideLoading]);
+
+    const normalizeError = (err) => {
+        const errors = err?.response?.data?.errors;
+        if (typeof errors === 'string') return errors;
+        if (Array.isArray(errors)) return errors.join(', ') || null;
+        if (errors && typeof errors === 'object') {
+            const msgs = Object.values(errors).flat().filter(Boolean);
+            if (msgs.length) return msgs.join(', ');
+        }
+        return null;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -77,7 +94,7 @@ const LoginForm = () => {
                 token: apiData.token,
             };
 
-            login(userData);
+            login(userData, rememberMe);
             await new Promise(resolve => setTimeout(resolve, 2500));
             hideLoading();
 
@@ -86,7 +103,7 @@ const LoginForm = () => {
             });
 
         } catch (err) {
-            const message = err.response?.data?.errors ?? 'Tidak dapat terhubung ke server. Coba lagi.';
+            const message = normalizeError(err) ?? 'Tidak dapat terhubung ke server. Coba lagi.';
             setError(message);
             hideLoading();
         } finally {
@@ -117,8 +134,8 @@ const LoginForm = () => {
                 {/* Email */}
                 <motion.div variants={itemVariants} className="space-y-0.5">
                     <label className="text-[11px] font-semibold text-[#54606b]" htmlFor="email">Email</label>
-                    <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#54606b] pointer-events-none" />
+                    <div className="relative group">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#54606b] group-focus-within:text-[#ED5807] transition-colors pointer-events-none" />
                         <input
                             id="email" type="email" required placeholder="name@paylocity.com"
                             value={email} onChange={(e) => setEmail(e.target.value)}
@@ -132,8 +149,8 @@ const LoginForm = () => {
                 {/* Password */}
                 <motion.div variants={itemVariants} className="space-y-0.5">
                     <label className="text-[11px] font-semibold text-[#54606b]" htmlFor="password">Kata Sandi</label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#54606b] pointer-events-none" />
+                    <div className="relative group">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#54606b] group-focus-within:text-[#ED5807] transition-colors pointer-events-none" />
                         <input
                             id="password" type={showPassword ? 'text' : 'password'} required placeholder="••••••••"
                             value={password} onChange={(e) => setPassword(e.target.value)}
@@ -158,22 +175,22 @@ const LoginForm = () => {
                         />
                         <span className="text-[11px] text-[#54606b]">Ingatkan saya</span>
                     </label>
-                    <a onClick={() => navigate('#forget')} className="text-[11px] text-[#ED5807] hover:text-[#a33900] font-semibold transition-colors shrink-0">Lupa?</a>
                 </motion.div>
 
                 {/* Submit */}
                 <motion.div variants={itemVariants}>
-                    <button
+                    <motion.button
                         type="submit"
-                        className="w-full bg-[#ED5807] hover:bg-[#d64f06] text-white font-semibold py-2.5 rounded-md text-xs 
-                        border-2 border-[#323E48] shadow-[2px_2px_0px_#323E48] active:shadow-none active:translate-x-0.5 
-                        active:translate-y-0.5 transition-all flex items-center justify-center gap-2 group
-                        disabled:opacity-60 disabled:cursor-not-allowed disabled:active:shadow-[2px_2px_0px_#323E48]
-                        disabled:active:translate-x-0 disabled:active:translate-y-0"
+                        whileHover={{ scale: 1.02, y: -1 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="shine w-full bg-gradient-to-r from-[#ED5807] to-[#ff7a1a] hover:from-[#d64f06] hover:to-[#ED5807] text-white font-semibold py-2.5 rounded-md text-xs 
+                        shadow-[0_6px_18px_-4px_rgba(237,88,7,0.5)] hover:shadow-[0_10px_24px_-6px_rgba(237,88,7,0.6)] transition-shadow
+                        flex items-center justify-center gap-2 group
+                        disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         Masuk
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </motion.button>
                 </motion.div>
 
             </motion.form>
@@ -197,12 +214,12 @@ const LoginForm = () => {
                 animate="visible"
                 className="grid grid-cols-2 gap-2"
             >
-                <motion.button variants={itemVariants} className="flex items-center justify-center gap-1.5 py-2 px-1 border-2 border-[#323E48] rounded-md 
+                <motion.button type="button" variants={itemVariants} onClick={handleSocialNotReady} className="flex items-center justify-center gap-1.5 py-2 px-1 border-2 border-[#323E48] rounded-md 
                 bg-white hover:bg-[#F6F4F0] transition-all font-semibold text-[#323E48] shadow-[2px_2px_0px_#323E48] 
                 active:shadow-none active:translate-x-px active:translate-y-px text-[11px]">
                     <GoogleIcon /><span className="truncate">Google</span>
                 </motion.button>
-                <motion.button variants={itemVariants} className="flex items-center justify-center gap-1.5 py-2 px-1 border-2 border-[#323E48] rounded-md 
+                <motion.button type="button" variants={itemVariants} onClick={handleSocialNotReady} className="flex items-center justify-center gap-1.5 py-2 px-1 border-2 border-[#323E48] rounded-md 
                 bg-white hover:bg-[#F6F4F0] transition-all font-semibold text-[#323E48] shadow-[2px_2px_0px_#323E48] 
                 active:shadow-none active:translate-x-px active:translate-y-px text-[11px]">
                     <LinkedInIcon /><span className="truncate">LinkedIn</span>

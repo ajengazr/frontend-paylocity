@@ -15,6 +15,7 @@ export const contactOptions = [
         desc: "Diskusikan langsung dengan tim PAYLOCITY!",
         schedule: "Senin - Jumat : 09:00 - 18:00 WIB",
         action: "087100008888",
+        href: "tel:087100008888",
         color: "bg-blue-500",
     },
     {
@@ -22,6 +23,7 @@ export const contactOptions = [
         title: "Email PAYLOCITY",
         desc: "Butuh inquiry lebih detail? Kirim email Anda ke PAYLOCITY!",
         action: "paylocity@co.com",
+        href: "mailto:paylocity@co.com",
         color: "bg-orange-500",
     },
     {
@@ -29,6 +31,7 @@ export const contactOptions = [
         title: "PAYLOCITY Help Center",
         desc: "Lebih dari 400+ artikel FAQ untuk membantu menjawab pertanyaan Anda.",
         action: "Lihat Help Center",
+        to: "/help",
         color: "bg-purple-500",
     },
 ];

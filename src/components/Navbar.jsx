@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useLoading } from '../contexts/LoadingContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { staggerContainer } from '../animations/variants';
 
 const navItemVariants = {
@@ -22,15 +21,12 @@ const mobileMenuVariants = {
 
 const Navbar = ({ headerOpacity }) => {
     const navigate = useNavigate();
-    const { showLoading } = useLoading();
+    const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleNavigate = (path) => {
         setIsMobileMenuOpen(false);
-        showLoading();
-        setTimeout(() => {
-            navigate(path);
-        }, 2000);
+        navigate(path);
     };
 
     const navLinks = [
@@ -39,10 +35,12 @@ const Navbar = ({ headerOpacity }) => {
         { label: 'Bantuan', path: '/help' },
     ];
 
+    const isActive = (path) => location.pathname === path;
+
     return (
         <motion.nav
             style={{ opacity: headerOpacity }}
-            className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100"
+            className="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-200/60"
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
@@ -69,27 +67,36 @@ const Navbar = ({ headerOpacity }) => {
                     initial="hidden"
                     animate="visible"
                 >
-                    {navLinks.map((link) => (
-                        <motion.button
-                            key={link.path}
-                            variants={navItemVariants}
-                            onClick={() => handleNavigate(link.path)}
-                            className="relative font-medium text-sm lg:text-base hover:text-[#ff6b00] transition-colors py-1"
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            {link.label}
-                            <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-[#ff6b00] group-hover:w-full transition-all duration-300" />
-                        </motion.button>
-                    ))}
+                    {navLinks.map((link) => {
+                        const active = isActive(link.path);
+                        return (
+                            <motion.button
+                                key={link.path}
+                                variants={navItemVariants}
+                                onClick={() => handleNavigate(link.path)}
+                                className={`relative font-medium text-sm lg:text-base py-1 transition-colors ${active ? 'text-[#ff6b00]' : 'text-[#1b1c1c] hover:text-[#ff6b00]'}`}
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                {link.label}
+                                <motion.span
+                                    layoutId="nav-underline"
+                                    className="absolute -bottom-0.5 left-0 h-0.5 bg-[#ff6b00]"
+                                    initial={false}
+                                    animate={{ width: active ? '100%' : '0%' }}
+                                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                />
+                            </motion.button>
+                        );
+                    })}
                 </motion.div>
 
                 {/* Desktop CTA + Mobile Hamburger */}
                 <div className="flex items-center gap-2 sm:gap-4">
                     <motion.button
                         onClick={() => handleNavigate('/login')}
-                        className="hidden md:block text-xs lg:text-sm px-3 lg:px-5 py-2 lg:py-2.5 border border-[#ff6b00] text-[#ff6b00] rounded-full hover:bg-[#ff6b00]/5 transition-all font-medium"
-                        whileHover={{ scale: 1.05 }}
+                        className="shine hidden md:block text-xs lg:text-sm px-5 lg:px-6 py-2 lg:py-2.5 bg-[#ff6b00] text-white rounded-full hover:bg-[#e55e00] transition-all font-medium shadow-lg shadow-[#ff6b00]/25"
+                        whileHover={{ scale: 1.06, y: -1 }}
                         whileTap={{ scale: 0.95 }}
                     >
                         Masuk
@@ -146,18 +153,24 @@ const Navbar = ({ headerOpacity }) => {
                             initial="hidden"
                             animate="visible"
                         >
-                            {navLinks.map((link, index) => (
-                                <motion.button
-                                    key={link.path}
-                                    variants={navItemVariants}
-                                    custom={index}
-                                    onClick={() => handleNavigate(link.path)}
-                                    className="block w-full text-left text-xs sm:text-sm font-medium text-[#1b1c1c] hover:text-[#ff6b00] transition-colors py-2.5 px-3 rounded-lg hover:bg-[#ff6b00]/5 active:bg-[#ff6b00]/10"
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    {link.label}
-                                </motion.button>
-                            ))}
+                            {navLinks.map((link, index) => {
+                                const active = isActive(link.path);
+                                return (
+                                    <motion.button
+                                        key={link.path}
+                                        variants={navItemVariants}
+                                        custom={index}
+                                        onClick={() => handleNavigate(link.path)}
+                                        className={`block w-full text-left text-xs sm:text-sm font-medium transition-colors py-2.5 px-3 rounded-lg ${active
+                                            ? 'bg-[#ff6b00]/10 text-[#ff6b00]'
+                                            : 'text-[#1b1c1c] hover:bg-[#ff6b00]/5 hover:text-[#ff6b00]'
+                                        }`}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        {link.label}
+                                    </motion.button>
+                                );
+                            })}
                             <motion.button
                                 variants={navItemVariants}
                                 onClick={() => handleNavigate('/login')}

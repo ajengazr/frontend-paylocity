@@ -49,14 +49,23 @@ const Toast = ({ id, message, type, duration, onRemove }) => {
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, x: 100, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 100, scale: 0.9 }}
-            transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-            className={`pointer-events-auto w-80 sm:w-96 rounded-xl border shadow-lg shadow-black/5 overflow-hidden ${style.bg} ${style.border}`}
+            initial={{ opacity: 0, x: 120, scale: 0.85, filter: 'blur(3px)' }}
+            animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, x: 100, scale: 0.9, filter: 'blur(2px)' }}
+            transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+            className={`pointer-events-auto w-80 sm:w-96 rounded-xl border shadow-lg shadow-black/10 overflow-hidden relative ${style.bg} ${style.border}`}
         >
+            {/* Pita akromat atas */}
+            <div className={`absolute top-0 left-0 right-0 h-0.5 ${style.iconColor}`} />
             <div className="flex items-start gap-3 p-4">
-                <Icon className={`w-5 h-5 mt-0.5 shrink-0 ${style.iconColor}`} />
+                <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 16, delay: 0.05 }}
+                >
+                    <Icon className={`w-5 h-5 mt-0.5 shrink-0 ${style.iconColor}`} />
+                </motion.div>
                 <div className="flex-1">
                     <p className={`text-sm font-medium leading-relaxed ${style.text}`}>{message}</p>
                 </div>

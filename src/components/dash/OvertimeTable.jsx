@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const formatDate = (val) => {
@@ -14,17 +14,6 @@ const OvertimeTable = ({ title, columns, data, searchQuery, role, isLoading = fa
     const isEmployee = role === 'EMPLOYEE';
 
     const safeQuery = (searchQuery || '').toLowerCase();
-
-    // ========== DEBUG ==========
-    useEffect(() => {
-        console.log('=== OvertimeTable DEBUG ===');
-        console.log('data:', data);
-        console.log('isArray:', Array.isArray(data));
-        console.log('data.length:', Array.isArray(data) ? data.length : 'N/A');
-        console.log('columns:', columns);
-        console.log('role:', role);
-        console.log('===========================');
-    }, [data, columns, role]);
 
     // ========== FILTER ==========
     const filtered = useMemo(() => {
@@ -191,8 +180,8 @@ const OvertimeTable = ({ title, columns, data, searchQuery, role, isLoading = fa
     };
 
     return (
-        <div className={`rounded-xl border shadow-sm transition-all overflow-hidden ${isDark ? 'bg-[#1e293b] border-[#2d3748]' : 'bg-white border-gray-100'}`}>
-            <div className="px-3 sm:px-5 py-3 sm:py-4 border-b flex justify-between items-center">
+        <div className={`card-modern card-accent rounded-2xl overflow-hidden`}>
+            <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-gray-100/60 dark:border-gray-700/40 flex justify-between items-center">
                 <div>
                     <h3 className="text-sm sm:text-base font-semibold">{title}</h3>
                     <p className={`text-[10px] sm:text-xs mt-0.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
@@ -206,13 +195,13 @@ const OvertimeTable = ({ title, columns, data, searchQuery, role, isLoading = fa
                 )}
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-auto overscroll-contain max-h-[340px] sm:max-h-[440px]">
                 {filtered.length === 0 ? (
                     renderEmptyState()
                 ) : (
                     <table className="w-full text-left">
                         <thead>
-                            <tr className={`border-b text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase ${isDark ? 'border-[#2d3748] text-gray-500' : 'border-gray-100 text-gray-400'}`}>
+                            <tr className={`sticky top-0 z-10 border-b text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase ${isDark ? 'border-[#2d3748] text-gray-500 bg-[#1a2332]' : 'border-gray-100 text-gray-400 bg-white'}`}>
                                 {columns?.map((col) => (
                                     <th key={col} className="px-2 sm:px-5 py-2.5 sm:py-3">{col}</th>
                                 ))}

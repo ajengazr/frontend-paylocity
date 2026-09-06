@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ChevronDown } from 'lucide-react';
 
@@ -72,7 +73,7 @@ const PayrollChart = ({ title, subtitle, data = [] }) => {
     };
 
     return (
-        <div className={`p-6 rounded-xl border shadow-sm transition-all flex flex-col justify-between ${isDark ? 'bg-[#1e293b] border-[#2d3748]' : 'bg-white border-gray-100'}`}>
+        <div className={`card-modern card-accent p-6 rounded-2xl flex flex-col justify-between h-full`}>
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h3 className="text-base font-semibold">{title}</h3>
@@ -139,30 +140,46 @@ const PayrollChart = ({ title, subtitle, data = [] }) => {
                         <line x1="0" y1="100" x2="500" y2="100" stroke={isDark ? '#2d3748' : '#f3f4f6'} strokeWidth="1" />
                         <line x1="0" y1="150" x2="500" y2="150" stroke={isDark ? '#2d3748' : '#f3f4f6'} strokeWidth="1" />
 
-                        <path d={chartPath.areaD} fill="url(#chartGradient)" />
-                        <path d={chartPath.pathD} fill="none" stroke="#ff6b00" strokeWidth="3.5" strokeLinecap="round" />
+                        <path d={chartPath.areaD} fill="url(#chartGradient)" opacity="0.85" />
+                        <motion.path
+                            d={chartPath.pathD}
+                            fill="none"
+                            stroke="#ff6b00"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 1.4, ease: 'easeInOut' }}
+                        />
 
                         {chartPath.points.map((point, i) => (
-                            <g key={i}>
-                                <circle
+                            <motion.g key={i}>
+                                <motion.circle
                                     cx={point.x}
                                     cy={point.y}
                                     r="5"
                                     fill="#ff6b00"
                                     stroke={isDark ? '#1e293b' : '#ffffff'}
                                     strokeWidth="2"
+                                    initial={{ scale: 0, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: 'spring', stiffness: 300, damping: 16, delay: 0.5 + i * 0.12 }}
+                                    style={{ transformOrigin: `${point.x}px ${point.y}px` }}
                                 />
-                                <text
+                                <motion.text
                                     x={point.x}
                                     y={point.y - 10}
                                     textAnchor="middle"
                                     fill={isDark ? '#9ca3af' : '#6b7280'}
                                     fontSize="10"
                                     fontWeight="600"
+                                    initial={{ opacity: 0, y: 6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.8 + i * 0.12 }}
                                 >
                                     {(point.salary / 1000000).toFixed(1)}jt
-                                </text>
-                            </g>
+                                </motion.text>
+                            </motion.g>
                         ))}
                     </svg>
                 )}

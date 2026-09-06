@@ -1,16 +1,9 @@
 import { motion } from 'framer-motion';
 import { Search, HelpCircle, X } from 'lucide-react';
 import { useState } from 'react';
-import { useLoading } from '../../contexts/LoadingContext';
-import { useEffect } from 'react';
 
 const HelpHero = ({ onSearch }) => {
     const [query, setQuery] = useState('');
-    const { hideLoading } = useLoading();
-
-    useEffect(() => {
-        hideLoading();
-    }, [hideLoading]);
 
     const handleChange = (e) => {
         const value = e.target.value;

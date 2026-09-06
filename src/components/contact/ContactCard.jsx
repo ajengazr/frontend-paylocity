@@ -1,11 +1,55 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ContactCard = ({ item, index }) => {
-    const getHref = () => {
-        if (item.action.includes('@')) return `mailto:${item.action}`;
-        if (item.action.includes('150')) return 'tel:150150';
-        return '#';
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        if (item.to) {
+            navigate(item.to);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const isClickable = Boolean(item.href || item.to);
+
+    const renderAction = () => {
+        // Link eksternal (mailto / tel)
+        if (item.href) {
+            return (
+                <motion.a
+                    href={item.href}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-2 text-[#ff6b00] font-semibold text-sm md:text-base"
+                >
+                    {item.action}
+                    <ArrowRight className="w-4 h-4 transition-transform" />
+                </motion.a>
+            );
+        }
+
+        // Navigasi internal
+        if (item.to) {
+            return (
+                <motion.button
+                    type="button"
+                    onClick={handleNavigate}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-2 text-[#ff6b00] font-semibold text-sm md:text-base"
+                >
+                    {item.action}
+                    <ArrowRight className="w-4 h-4" />
+                </motion.button>
+            );
+        }
+
+        // Tidak ada aksi - tampil sebagai teks biasa agar tidak menipu
+        return (
+            <span className="inline-block text-sm md:text-base font-semibold text-gray-500">
+                {item.action}
+            </span>
+        );
     };
 
     return (
@@ -32,14 +76,11 @@ const ContactCard = ({ item, index }) => {
                 </p>
             )}
 
-            <motion.a
-                href={getHref()}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 text-[#ff6b00] font-semibold text-sm md:text-base "
-            >
-                {item.action}
-                <ArrowRight className="w-4 h-4 transition-transform " />
-            </motion.a>
+            {isClickable && (
+                <div className="border-t border-gray-100 pt-4 md:pt-5 mt-4 md:mt-6">
+                    {renderAction()}
+                </div>
+            )}
         </motion.div>
     );
 };

@@ -16,7 +16,7 @@ const AuthLeftPanel = () => {
     const navigate = useNavigate();
     return (
         <motion.section 
-            className="w-full lg:w-1/2 bg-[#ED5807] relative flex flex-col justify-center items-center p-4 sm:p-6 lg:h-screen overflow-hidden min-h-50 sm:min-h-70 lg:min-h-0"
+            className="w-full lg:w-1/2 relative flex flex-col justify-center items-center p-4 sm:p-6 lg:h-screen overflow-hidden min-h-50 sm:min-h-70 lg:min-h-0 bg-gradient-to-br from-[#ff7a1a] via-[#E25605] to-[#c2410c]"
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
@@ -45,24 +45,65 @@ const AuthLeftPanel = () => {
                 variants={itemVariants}
                 className="absolute inset-0 pointer-events-none"
             >
-                <div className="absolute top-[-10%] left-[-10%] w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-[-5%] right-[-5%] w-48 h-48 sm:w-96 sm:h-96 bg-black/10 rounded-full blur-3xl" />
+                <motion.div 
+                    className="absolute top-[-10%] left-[-10%] w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full blur-3xl animate-blob"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div 
+                    className="absolute bottom-[-5%] right-[-5%] w-48 h-48 sm:w-96 sm:h-96 bg-black/10 rounded-full blur-3xl animate-blob"
+                    animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.8, 0.4] }}
+                    transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+                />
+
+                {/* Partikel kecil mengambang */}
+                <motion.div
+                    animate={{ y: [0, -30, 0] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute top-[18%] right-[14%] w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-white/25 blur-[1px]"
+                />
+                <motion.div
+                    animate={{ y: [0, 26, 0], x: [0, 12, 0] }}
+                    transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute bottom-[22%] left-[12%] w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-white/20"
+                />
+                <motion.div
+                    animate={{ y: [0, -18, 0], x: [0, -14, 0] }}
+                    transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute top-[40%] left-[10%] w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-white/30"
+                />
+
+                {/* Gelembung melayang */}
+                <motion.div
+                    animate={{ y: [0, -40, 0], opacity: [0.2, 0.7, 0.2] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute top-[62%] right-[18%] w-6 h-6 sm:w-9 sm:h-9 rounded-full border border-white/25"
+                />
+                <motion.div
+                    animate={{ y: [0, 32, 0], opacity: [0.4, 0.8, 0.4] }}
+                    transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute top-[28%] right-[30%] w-3 h-3 sm:w-5 sm:h-5 rounded-full border border-white/20"
+                />
             </motion.div>
 
             <div className="relative z-10 w-full max-w-md text-center flex flex-col items-center">
                 
                 <motion.div 
                     variants={itemVariants}
-                    className="mb-3 sm:mb-6 xl:mb-8 transition-transform duration-500 hover:-translate-y-1"
+                    className="mb-3 sm:mb-6 xl:mb-8"
                 >
-                    <div className="w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 xl:w-56 xl:h-56 bg-white rounded-[30%_70%_70%_30%/30%_30%_70%_70%] overflow-hidden border-2 sm:border-4 border-[#323E48] shadow-[4px_4px_0px_rgba(0,0,0,0.2)] sm:shadow-[8px_8px_0px_rgba(0,0,0,0.2)]">
+                    <motion.div
+                        animate={{ rotate: [0, 2, 0, -2, 0] }}
+                        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                        className="w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 xl:w-56 xl:h-56 bg-white rounded-[30%_70%_70%_30%/30%_30%_70%_70%] overflow-hidden border-2 sm:border-4 border-[#323E48] shadow-[4px_4px_0px_rgba(0,0,0,0.2)] sm:shadow-[8px_8px_0px_rgba(0,0,0,0.2)] glow-orange"
+                    >
                         <img
                             alt="Welcome"
                             className="w-full h-full object-cover"
                             src="/src/assets/about.png"
                             loading="lazy"
                         />
-                    </div>
+                    </motion.div>
                 </motion.div>
 
                 <motion.h1 

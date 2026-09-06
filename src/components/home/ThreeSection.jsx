@@ -31,8 +31,8 @@ const ThreeSection = () => {
           variants={fadeInUp}
           className="text-center mb-16"
         >
-          <div className="inline text-[#ff6b00] font-semibold tracking-widest">3S PAYROLL PLATFORM</div>
-          <h2 className="text-4xl font-semibold mt-3">
+          <div className="inline text-[#ff6b00] font-semibold tracking-widest uppercase">3S Payroll Platform</div>
+          <h2 className="text-4xl font-semibold mt-3 leading-tight">
             Hemat waktu dan energi berharga dengan proses penggajian otomatis.
           </h2>
           <p className="mt-4 text-lg text-gray-600">
@@ -46,19 +46,26 @@ const ThreeSection = () => {
           whileInView="visible"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="grid md:grid-cols-3 gap-8"
+          className="grid gap-6 md:grid-cols-3"
         >
           {cards.map((card, index) => (
             <motion.div
               key={index}
               variants={fadeInUp}
-              className="group bg-[#fdefe6] border border-gray-100 rounded-3xl p-10 shadow-[0_4px_20px_rgba(255,107,0,0.08)] "
+              className="relative bg-[#fdefe6] border border-[#ff6b00]/10 rounded-3xl p-10 overflow-hidden shadow-[0_4px_20px_rgba(255,107,0,0.08)]"
             >
-              <div className="w-16 h-16 bg-[#ff6b00] rounded-2xl flex items-center justify-center mb-8 group-">
+              {/* Aksen sudut halus */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[#ff6b00]/5 blur-2xl" />
+
+              {/* Icon */}
+              <div className="relative w-16 h-16 bg-[#ff6b00] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-[#ff6b00]/25">
                 {card.icon}
               </div>
-              <h3 className="text-2xl font-semibold mb-3">{card.title}</h3>
-              <p className="text-gray-600">{card.desc}</p>
+
+              <h3 className="text-2xl font-semibold mb-3">
+                {card.title}
+              </h3>
+              <p className="text-gray-600 leading-relaxed">{card.desc}</p>
             </motion.div>
           ))}
         </motion.div>

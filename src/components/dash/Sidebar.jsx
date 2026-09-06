@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useLoading } from '../../contexts/LoadingContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { 
-    Menu, X, AlertTriangle, Shield, LogOut,
+    Menu, X, AlertTriangle, LogOut,
     LayoutDashboard, Users, Building2, Briefcase, 
     Clock, DollarSign, FileText, UserCircle,
     User, Receipt, Wallet, Calendar, Plus, Search, 
@@ -14,11 +13,10 @@ import {
 } from 'lucide-react';
 import { slideLeft, scaleUp, staggerContainer, staggerItem } from '../../animations/variants';
 
-const Sidebar = ({ menu, activeTab, setActiveTab, role }) => {
+const Sidebar = ({ menu, activeTab, setActiveTab }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
     const { logout } = useAuth();
-    const { showLoading, hideLoading } = useLoading();
     const { isDark } = useTheme();
     const navigate = useNavigate();
 
@@ -38,11 +36,6 @@ const Sidebar = ({ menu, activeTab, setActiveTab, role }) => {
         setIsOpen(false);
     };
 
-    const handleAdmin = () => {
-        setActiveTab('Kelola Admin');
-        setIsOpen(false);
-    };
-
     const handleLogoutClick = () => {
         setIsLogoutConfirmOpen(true);
     };
@@ -53,10 +46,7 @@ const Sidebar = ({ menu, activeTab, setActiveTab, role }) => {
 
     const confirmLogout = async () => {
         setIsLogoutConfirmOpen(false);
-        showLoading();
-        await new Promise(resolve => setTimeout(resolve, 2500));
-        logout();
-        hideLoading();
+        await logout();
         navigate('/login', { replace: true });
     };
 
@@ -142,19 +132,21 @@ const Sidebar = ({ menu, activeTab, setActiveTab, role }) => {
             >
                 {/* Logo */}
                 <motion.div 
-                    className="p-4 sm:p-5 lg:p-6 shrink-0"
+                    className="relative p-4 sm:p-5 lg:p-6 shrink-0 overflow-hidden"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.4 }}
                 >
+                    {/* Glow di belakang logo */}
+                    <div aria-hidden="true" className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-[#ff6b00]/20 blur-2xl animate-pulse" />
                     <motion.img 
                         src="/logo.png" 
                         alt="Paylocity Logo" 
-                        className="w-14 sm:w-16 lg:w-20 h-auto mb-2"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.2 }}
+                        className="w-14 sm:w-16 lg:w-20 h-auto mb-2 drop-shadow-[0_8px_20px_rgba(255,107,0,0.25)]"
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
                     />
-                    <p className={`text-[10px] lg:text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <p className={`text-[10px] lg:text-xs uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                         HRIS Payroll
                     </p>
                 </motion.div>
@@ -172,22 +164,30 @@ const Sidebar = ({ menu, activeTab, setActiveTab, role }) => {
                             <motion.button
                                 key={item.name}
                                 variants={itemVariants}
-                                whileHover={{ x: 4, scale: 1.01 }}
+                                whileHover={!isActive ? { x: 4, scale: 1.01 } : undefined}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => handleNav(item.name)}
-                                className={`w-full flex items-center gap-3 px-3 lg:px-4 py-2.5 lg:py-3 text-xs lg:text-sm font-medium rounded-xl transition-all duration-200 ${isActive
-                                    ? 'bg-[#ff6b00]/10 text-[#ff6b00] shadow-sm'
+                                className={`relative w-full flex items-center gap-3 px-3 lg:px-4 py-2.5 lg:py-3 text-xs lg:text-sm font-medium rounded-xl transition-colors duration-200 ${isActive
+                                    ? 'text-white'
                                     : isDark
-                                        ? 'text-gray-300 hover:bg-[#2a3547]'
-                                        : 'text-gray-600 hover:bg-gray-100'
+                                        ? 'text-gray-300 hover:text-gray-100 hover:bg-[#2a3547]'
+                                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                                     }`}
                             >
-                                <Icon className={`w-4 h-4 lg:w-5 lg:h-5 shrink-0 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
-                                <span className="truncate">{item.name}</span>
                                 {isActive && (
-                                    <motion.div
-                                        layoutId="activeIndicator"
-                                        className="ml-auto w-1.5 h-1.5 rounded-full bg-[#ff6b00]"
+                                    <motion.span
+                                        layoutId="activePill"
+                                        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#ff9a2a] shadow-lg shadow-[#ff6b00]/30"
+                                    />
+                                )}
+                                <Icon className={`relative w-4 h-4 lg:w-5 lg:h-5 shrink-0 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                                <span className="relative truncate">{item.name}</span>
+                                {isActive && (
+                                    <motion.span
+                                        layoutId="activeDot"
+                                        className="relative ml-auto w-1.5 h-1.5 rounded-full bg-white"
+                                        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
                                     />
                                 )}
                             </motion.button>
@@ -201,20 +201,6 @@ const Sidebar = ({ menu, activeTab, setActiveTab, role }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5, duration: 0.4 }}
                 >
-                    {/* Admin Button */}
-                    {role === 'SUPER_ADMIN' && (
-                        <motion.button 
-                            variants={itemVariants}
-                            whileHover={{ x: 4, scale: 1.01 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={handleAdmin}
-                            className={`w-full flex items-center gap-3 px-3 lg:px-4 py-2.5 lg:py-3 text-xs lg:text-sm font-medium rounded-xl transition-all duration-200 ${isDark ? 'text-gray-300 hover:bg-[#2a3547]' : 'text-gray-600 hover:bg-gray-100'}`}
-                        >
-                            <Shield className="w-4 h-4 lg:w-5 lg:h-5" />
-                            <span>Kelola Admin</span>
-                        </motion.button>
-                    )}
-
                     {/* Logout Button */}
                     <motion.button
                         whileHover={{ x: 4, scale: 1.01 }}

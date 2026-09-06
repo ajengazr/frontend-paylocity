@@ -1,15 +1,7 @@
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../../animations/variants';
-import { useEffect } from 'react';
-import { useLoading } from '../../contexts/LoadingContext';
 
 const HeroAbout = () => {
-    const { hideLoading } = useLoading();
-
-    useEffect(() => {
-        hideLoading();
-    }, [hideLoading]);
-    
     return (
         <section className="pt-24 pb-20 bg-linear-to-br from-[#addcff] via-white to-[#d6e5f0] min-h-screen flex items-center">
             <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center">

@@ -1,13 +1,6 @@
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
-import { useLoading } from '../../contexts/LoadingContext';
 
 const ContactHeader = () => {
-    const { hideLoading } = useLoading();
-
-    useEffect(() => {
-        hideLoading();
-    }, [hideLoading]);
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
