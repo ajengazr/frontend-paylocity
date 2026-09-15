@@ -7,42 +7,46 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Sesi dipegang cookie httpOnly yang dipasang server saat login. Storage di
+    // browser hanya menyimpan profil tampilan (nama, email, peran) supaya antarmuka
+    // tidak berkedip saat halaman dimuat ulang. Token sengaja tidak ikut disimpan:
+    // token di localStorage bisa dibaca skrip mana pun yang berhasil masuk ke
+    // halaman, dan itu menghapus seluruh manfaat cookie httpOnly.
     useEffect(() => {
         const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
-        const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-        if (storedUser && storedToken) {
+        if (storedUser) {
             try {
-                const parsedUser = JSON.parse(storedUser);
                 // eslint-disable-next-line react-hooks/set-state-in-effect
-                setUser({ ...parsedUser, token: storedToken });
+                setUser(JSON.parse(storedUser));
             } catch (e) {
                 console.error('Gagal parse user dari storage', e);
                 localStorage.removeItem('user');
-                localStorage.removeItem('token');
                 sessionStorage.removeItem('user');
-                sessionStorage.removeItem('token');
             }
         }
+
+        // Token sisa dari versi lama dibersihkan sekali saat aplikasi dibuka.
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
 
         setIsLoading(false);
     }, []);
 
     const login = (userData, remember = true) => {
-        console.log('login() called with:', userData);
-
         const storage = remember ? localStorage : sessionStorage;
 
         const safeUser = {
+            ...(userData || {}),
             name: userData?.name || userData?.username || 'User',
             email: userData?.email || '',
             role: userData?.role || 'employee',
-            token: userData?.token || '',
-            ...userData,
         };
 
+        // Jaga-jaga bila ada pemanggil lama yang masih menyertakan token.
+        delete safeUser.token;
+
         storage.setItem('user', JSON.stringify(safeUser));
-        storage.setItem('token', safeUser.token);
 
         setUser(safeUser);
         setIsLoading(false);

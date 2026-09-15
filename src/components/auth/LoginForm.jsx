@@ -87,15 +87,16 @@ const LoginForm = () => {
                 throw new Error('Data login tidak valid');
             }
 
+            // Token tidak diteruskan ke context: sesi sudah dipegang cookie httpOnly
+            // yang dipasang server, jadi tidak ada gunanya menyalinnya ke state atau
+            // storage browser.
             const userData = {
                 name: apiData.username || apiData.name || 'User',
                 email: apiData.email,
                 role: apiData.role,
-                token: apiData.token,
             };
 
             login(userData, rememberMe);
-            await new Promise(resolve => setTimeout(resolve, 2500));
             hideLoading();
 
             navigate('/dashboard', {
