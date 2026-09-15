@@ -39,9 +39,14 @@ function App() {
                   <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/notifications" element={<NotificationsPage />} />
-                    <Route path="/dashboard/cuti" element={<DashboardTabRoute tab="Manajemen Cuti" />} />
                     <Route path="/dashboard/my-cuti" element={<DashboardTabRoute tab="Cuti Saya" />} />
-                    
+                  </Route>
+
+                  {/* Manajemen cuti hanya untuk HR. Karyawan yang membukanya
+                      dikembalikan ke dashboard, bukan dibiarkan pada halaman
+                      yang seluruh datanya akan ditolak server. */}
+                  <Route element={<ProtectedRoute roles={['HR_ADMIN', 'SUPER_ADMIN']} />}>
+                    <Route path="/dashboard/cuti" element={<DashboardTabRoute tab="Manajemen Cuti" />} />
                   </Route>
                 </Routes>
               </BrowserRouter>

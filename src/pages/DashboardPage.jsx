@@ -41,7 +41,6 @@ const DashboardPage = () => {
     if (!isAuthenticated || !role) {
         return null; // Sudah di-redirect oleh useEffect di atas
     }
-    console.log("rolenya: ", role);
 
     return <DashboardLayout role={role} />;
 };

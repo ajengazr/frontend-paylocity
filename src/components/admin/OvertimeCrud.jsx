@@ -56,7 +56,6 @@ const OvertimeCrud = ({ role }) => {
 
     const handleStatusUpdate = async (id, status, onDone) => {
         try {
-            console.log("ID NYA: ", id);
             await overtimeApi.updateStatus(id, { status });
             addToast(
                 `Pengajuan lembur ${status === 'APPROVED' ? 'disetujui' : 'ditolak'}!`,
@@ -179,8 +178,6 @@ const OvertimeCrud = ({ role }) => {
                 }}
                 rowActions={(row, refresh) => {
                     if (!isAdmin || row.status !== 'PENDING') return null;
-                    console.log("ROW  : ",row);
-                    console.log("ROW ID : ",row.id);
                     return (
                         <div className="flex items-center gap-1">
                             <motion.button

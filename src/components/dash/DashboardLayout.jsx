@@ -133,7 +133,6 @@ const DashboardLayout = ({ role, initialTab = 'Dashboard' }) => {
     const mergedTableData = useMemo(() => {
         // Backend full dashboard return overtimeHistory, individual endpoint return tableData
         const raw = dynamicData?.overtimeHistory || dynamicData?.tableData || [];
-        console.log('=== mergedTableData raw ===', raw);
 
         if (!Array.isArray(raw) || raw.length === 0) return [];
 
